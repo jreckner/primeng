@@ -1,0 +1,71 @@
+<div class="surface-card p-4 shadow-2 border-round">
+  <div class="text-3xl font-medium text-900 mb-3">Print Queue</div>
+  <div class="font-medium text-500 mb-3">
+    <p-table #printjobs
+      [value]="tableData"
+      [frozenValue]="lockedTableData"
+      [rows]="4"
+      [paginator]="true"
+      [showCurrentPageReport]="true"
+      responsiveLayout="stack"
+      [breakpoint]="'960px'"
+      styleClass="p-datatable-gridlines p-datatable-striped"
+      [tableStyle]="{'min-width': '30rem'}"
+      [globalFilterFields]="['name', 'documentStatus']"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} print jobs"
+    >
+      <ng-template pTemplate="caption">
+        <div class="flex">
+          <button pButton label="Clear" class="p-button-primary" icon="pi pi-filter-slash" (click)="clear(printjobs)"></button>
+          <span class="p-input-icon-left ml-auto">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="applyFilterGlobal($event, 'contains')" placeholder="Search keyword" />
+          </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">Name
+            <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+            <p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th>Description</th>
+          <th pSortableColumn="documentStatus">Status
+            <p-columnFilter type="text" field="documentStatus" display="menu"></p-columnFilter>
+            <p-sortIcon field="documentStatus"></p-sortIcon>
+          </th>
+          <th style="width:5rem"></th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="frozenbody" let-printJob let-index="rowIndex">
+        <tr>
+          <td><span class="p-column-title font-semibold">Name:</span>{{ printJob.name }}</td>
+          <td><span class="p-column-title font-semibold">Description:</span>{{ printJob.description }}</td>
+          <td><span class="p-column-title font-semibold">Status:</span>{{ printJob.documentStatus }}</td>
+          <td>
+            <button pButton type="button" [icon]="'pi pi-lock-open'" (click)="toggleLock(printJob,true,index)" class="p-button-sm p-button-text"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-printJob let-index="rowIndex">
+        <tr>
+          <td><span class="p-column-title font-semibold">Name:</span>{{ printJob.name }}</td>
+          <td><span class="p-column-title font-semibold">Description:</span>{{ printJob.description }}</td>
+          <td><span class="p-column-title font-semibold">Status:</span>{{ printJob.documentStatus }}</td>
+          <td>
+            <button pButton type="button" [icon]="'pi pi-lock'" [disabled]="lockedTableData.length >= 2" (click)="toggleLock(printJob,false,index)" class="p-button-sm p-button-text"></button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3">No Print Jobs found.</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft"></ng-template>
+    </p-table>
+  </div>
+</div>
